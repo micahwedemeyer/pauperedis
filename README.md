@@ -1,6 +1,6 @@
 # Pauperedis
 
-**TODO: Add description**
+A poor man's redis.
 
 ## Installation
 
