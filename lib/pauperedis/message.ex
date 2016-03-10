@@ -46,14 +46,9 @@ defmodule Pauperedis.Message do
   end
 
   defp bin_to_int(bin) do
-    bytes = byte_size(bin)
-    bin_tup = :binary.bin_to_list(bin) |> Enum.reverse |> List.to_tuple
-
-    v = Enum.reduce(0..(bytes - 1), 0, fn(i, acc) ->
-      acc + (:math.pow(2, 8 * i) * elem(bin_tup, i))
-    end)
-
-    round(v)
+    b = bit_size(bin)
+    << x :: size(b) >> = bin
+    x
   end
 
   defp value_length_start(message) do
