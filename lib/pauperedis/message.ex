@@ -24,6 +24,11 @@ defmodule Pauperedis.Message do
     %{message | key: binary_part(message.raw, 7, message.key_length)}
   end
 
+  def decode_value_length(message) do
+    len = binary_part(message.raw, value_length_start(message), 2) |> bin_to_int
+    %{message | value_length: len}
+  end
+
   defp bin_to_int(bin) do
     bytes = byte_size(bin)
     bin_tup = :binary.bin_to_list(bin) |> Enum.reverse |> List.to_tuple
@@ -33,5 +38,9 @@ defmodule Pauperedis.Message do
     end)
 
     round(v)
+  end
+
+  defp value_length_start(message) do
+    7 + message.key_length
   end
 end
