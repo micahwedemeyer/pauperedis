@@ -20,6 +20,10 @@ defmodule Pauperedis.Message do
     %{message | key_length: binary_part(message.raw, 5, 2) |> bin_to_int}
   end
 
+  def decode_key(message) do
+    %{message | key: binary_part(message.raw, 7, message.key_length)}
+  end
+
   defp bin_to_int(bin) do
     bytes = byte_size(bin)
     bin_tup = :binary.bin_to_list(bin) |> Enum.reverse |> List.to_tuple
