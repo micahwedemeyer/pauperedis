@@ -7,7 +7,7 @@ defmodule PauperedisTest.MessageTest do
   setup do
     # Set key "foo" to "barr"
     raw_bytes = <<0x00, 0x00, 0x00, 0x0C, 0x01, 0x00, 0x03, 0x66, 0x6F, 0x6F, 0x00, 0x04, 0x62, 0x61, 0x72, 0x72>>
-    {:ok, message: %Message{raw: raw_bytes}}
+    {:ok, raw: raw_bytes, message: %Message{raw: raw_bytes}}
   end
 
   test "message length", %{message: message} do
@@ -37,6 +37,13 @@ defmodule PauperedisTest.MessageTest do
 
   test "value", %{message: message} do
     m = message |> Message.decode_length |> Message.decode_command |> Message.decode_key_length |> Message.decode_key |> Message.decode_value_length |> Message.decode_value
+    assert "barr" == m.value
+  end
+
+  test "full decode", %{raw: raw} do
+    m = Message.decode(raw)
+    assert "SET" == m.command
+    assert "foo" == m.key
     assert "barr" == m.value
   end
 end

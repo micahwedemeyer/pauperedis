@@ -1,6 +1,17 @@
 defmodule Pauperedis.Message do
   defstruct raw: nil, length: 0, command: nil, key_length: 0, key: nil, value_length: 0, value: nil
 
+  def decode(raw) do
+    %Pauperedis.Message{raw: raw}
+    |> decode_length
+    |> decode_command
+    |> decode_key_length
+    |> decode_key
+    # TODO - Check if it's a SET vs GET, as GET will not have value
+    |> decode_value_length
+    |> decode_value
+  end
+
   def decode_length(message) do
     %{message | length: binary_part(message.raw, 0, 4) |> bin_to_int}
   end
