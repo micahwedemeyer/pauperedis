@@ -10,8 +10,14 @@ defmodule PauperedisTest.MessageTest do
     {:ok, message: %Message{raw: raw_bytes}}
   end
 
-  test "message_length", %{message: message} do
+  test "message length", %{message: message} do
     m = message |> Message.decode_length
     assert 12 == m.length
   end
+
+  test "command", %{message: message} do
+    m = message |> Message.decode_length |> Message.decode_command
+    assert "SET" == m.command
+  end
+
 end
