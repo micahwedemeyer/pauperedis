@@ -2,10 +2,7 @@ defmodule Pauperedis.Message do
   defstruct raw: nil, length: 0, command: nil, key_length: 0, key: nil, value_length: 0, value: nil
 
   def decode_length(message) do
-    bin = binary_part(message.raw, 0, 4)
-    len = bin_to_int(bin)
-
-    %{message | length: len}
+    %{message | length: binary_part(message.raw, 0, 4) |> bin_to_int}
   end
 
   def decode_command(message) do
@@ -17,6 +14,10 @@ defmodule Pauperedis.Message do
     end
 
     %{message | command: cmd}
+  end
+
+  def decode_key_length(message) do
+    %{message | key_length: binary_part(message.raw, 5, 2) |> bin_to_int}
   end
 
   defp bin_to_int(bin) do

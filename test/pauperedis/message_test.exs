@@ -20,4 +20,9 @@ defmodule PauperedisTest.MessageTest do
     assert "SET" == m.command
   end
 
+  test "key length", %{message: message} do
+    m = message |> Message.decode_length |> Message.decode_command |> Message.decode_key_length
+    assert 3 == m.key_length
+  end
+
 end
